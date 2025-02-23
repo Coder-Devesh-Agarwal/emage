@@ -1,8 +1,8 @@
-function handler(event: any) {
+function handler(event) {
   var request = event.request;
   var originalImagePath = request.uri;
   //  validate, process and normalize the requested operations in query parameters
-  var normalizedOperations: any = {};
+  var normalizedOperations = {};
   if (request.querystring) {
     Object.keys(request.querystring).forEach((operation) => {
       switch (operation.toLowerCase()) {

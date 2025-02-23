@@ -106,6 +106,15 @@ const s3Distribution = new sst.aws.Cdn(
     origins: [
       {
         originId: primaryOriginId,
+        domainName:
+          transformedImageBucket.nodes.bucket.bucketRegionalDomainName,
+        s3OriginConfig: {
+          originAccessIdentity: cloudfrontOAI.cloudfrontAccessIdentityPath,
+        },
+      },
+
+      {
+        originId: secondaryOriginId,
         domainName: imageProcessorFunction.url.apply(
           (url) => new URL(url).hostname
         ),
@@ -115,15 +124,6 @@ const s3Distribution = new sst.aws.Cdn(
           httpPort: 443,
           httpsPort: 443,
           originSslProtocols: ['TLSv1.2'],
-        },
-      },
-
-      {
-        originId: secondaryOriginId,
-        domainName:
-          transformedImageBucket.nodes.bucket.bucketRegionalDomainName,
-        s3OriginConfig: {
-          originAccessIdentity: cloudfrontOAI.cloudfrontAccessIdentityPath,
         },
       },
     ],

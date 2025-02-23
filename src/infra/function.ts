@@ -8,7 +8,7 @@ import { createResourceName } from './utils';
 const imageProcessorFunction = new sst.aws.Function(
   createResourceName('ImageProcessor'),
   {
-    handler: 'src/image-processor.handler',
+    handler: 'src/lambda/optimiser.handler',
     nodejs: { install: ['sharp'] },
     memory: '1024 MB',
     timeout: '30 seconds',
@@ -32,7 +32,7 @@ const cloudfrontRewriteFunction = new aws.cloudfront.Function(
     code: fs.readFileSync(
       path.join(
         path.dirname(fileURLToPath(import.meta.url)),
-        '../../src/rewrite-url.js'
+        '../../src/lambda/req-parser.js'
       ),
       'utf8'
     ),

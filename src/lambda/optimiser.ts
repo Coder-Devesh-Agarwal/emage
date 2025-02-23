@@ -37,9 +37,9 @@ interface TimingMetrics {
 // Constants
 const config: ImageProcessingConfig = {
   //@ts-ignore
-  originalBucket: Resource?.[createResourceName('Original')]?.name,
+  originalBucket: Resource['EMAGE_Original-gll'].name,
   //@ts-ignore
-  transformedBucket: Resource?.[createResourceName('Transformed')]?.name,
+  transformedBucket: Resource['EMAGE_Transformed-gll'].name,
   cacheTTL: process.env.transformedImageCacheTTL || 'max-age=31536000',
   maxImageSize: parseInt(process.env.maxImageSize || String(6 * 1024 * 1024)),
 };
