@@ -1,0 +1,23 @@
+{
+  "name": "aws-e-mage",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild --bundle --outfile=./dist/index.js --platform=node --target=node20 ./src/index.ts",
+    "deploy": "run-s build zip update",
+    "update": "aws lambda update-function-code --zip-file fileb://lambda.zip --function-name hello",
+    "zip": "zip -j lambda.zip dist/index.js"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "8.10.147",
+    "@types/node": "^22.13.4",
+    "esbuild": "^0.21.4",
+    "npm-run-all2": "^6.2.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.749.0",
+    "hono": "^4.7.1",
+    "plaiceholder": "^3.0.0",
+    "sharp": "^0.33.5",
+    "sst": "^3.9.2"
+  }
+}

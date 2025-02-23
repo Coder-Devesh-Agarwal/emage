@@ -1,0 +1,84 @@
+regions:
+  - global
+  - us-east-1
+  - us-east-2
+  # Add any other regions you're using
+
+# Your existing production account will remain untouched
+# blocklist:
+  # - "987654321098" # Production Account
+
+# This is YOUR account ID - replace with your actual account ID
+accounts:
+  '774305579852': # Replace with your learning account ID
+    presets:
+      - minimal-protection
+
+# Enhanced settings for easier resource deletion
+settings:
+  EC2Image:
+    IncludeDisabled: true
+    IncludeDeprecated: true
+    DisableDeregistrationProtection: true
+  EC2Instance:
+    DisableStopProtection: true
+    DisableDeletionProtection: true
+  RDSInstance:
+    DisableDeletionProtection: true
+  CloudFormationStack:
+    DisableDeletionProtection: true
+  DynamoDBTable:
+    DisableDeletionProtection: true
+
+# Resources to exclude from deletion (inherited from your config)
+resource-types:
+  excludes:
+    # Standard exclusions from your config
+    - ServiceCatalogTagOption
+    - ServiceCatalogTagOptionPortfolioAttachment
+    - FMSNotificationChannel
+    - FMSPolicy
+    - MachineLearningMLModel
+    - MachineLearningDataSource
+    - MachineLearningBranchPrediction
+    - MachineLearningEvaluation
+    - RoboMakerDeploymentJob
+    - RoboMakerFleet
+    - RoboMakerRobot
+    - RoboMakerSimulationJob
+    - RoboMakerRobotApplication
+    - RoboMakerSimulationApplication
+    - OpsWorksApp
+    - OpsWorksInstance
+    - OpsWorksLayer
+    - OpsWorksUserProfile
+    - OpsWorksCMBackup
+    - OpsWorksCMServer
+    - OpsWorksCMServerState
+    - CodeStarProject
+    - CodeStarConnection
+    - CodeStarNotification
+    - Cloud9Environment
+    - CloudSearchDomain
+    - RedshiftServerlessSnapshot
+    - RedshiftServerlessNamespace
+    - RedshiftServerlessWorkgroup
+    
+    # Only core account settings are protected - everything else will be deleted
+    - IAMLoginProfile # Protect sign-in ability
+    - Route53Domain # Optional - remove this line if you want to delete domains too
+
+presets:
+  # Minimal protection - only protects core account access
+  minimal-protection:
+    filters:
+      # Protect root credentials and access
+      IAMUser:
+        - property: Name
+          value: "root"  # Protect root user
+        
+      # Protect only the specific IAM role/user you use to sign in
+      # Replace "your-main-user" with your actual username
+      IAMUser:
+        - property: Name
+          value: "sst-creator"
