@@ -87,22 +87,6 @@ const secondaryOriginId = `${$app.name}-${$app.stage}-${createResourceName(
 const s3Distribution = new sst.aws.Cdn(
   createResourceName('ImageDistribution'),
   {
-    originGroups: [
-      {
-        originId: groupOriginId,
-        failoverCriteria: {
-          statusCodes: [403, 500, 503, 504],
-        },
-        members: [
-          {
-            originId: primaryOriginId,
-          },
-          {
-            originId: secondaryOriginId,
-          },
-        ],
-      },
-    ],
     origins: [
       {
         originId: primaryOriginId,
@@ -125,6 +109,47 @@ const s3Distribution = new sst.aws.Cdn(
           httpsPort: 443,
           originSslProtocols: ['TLSv1.2'],
         },
+      },
+    ],
+    originGroups: [
+      {
+        originId: groupOriginId,
+        failoverCriteria: {
+          statusCodes: [403, 500, 503, 504],
+        },
+        members: [
+          {
+            originId: primaryOriginId,
+          },
+          {
+            originId: secondaryOriginId,
+          },
+        ],
+      },
+    ],
+    orderedCacheBehaviors: [
+      {
+        pathPattern: '/images/*',
+        cachePolicyId: cachePolicy.id,
+        allowedMethods: ['GET', 'HEAD'],
+        cachedMethods: ['GET', 'HEAD'],
+        targetOriginId: groupOriginId,
+        viewerProtocolPolicy: 'redirect-to-https',
+        functionAssociations: [
+          {
+            eventType: 'viewer-request',
+            functionArn: cloudfrontRewriteFunction.arn,
+          },
+        ],
+        responseHeadersPolicyId: cloudfrontResponseHeadersPolicy.id,
+      },
+      {
+        pathPattern: '/api/*',
+        cachePolicyId: cachePolicy.id,
+        allowedMethods: ['GET', 'HEAD', 'POST'],
+        cachedMethods: ['GET', 'HEAD'],
+        targetOriginId: groupOriginId,
+        viewerProtocolPolicy: 'redirect-to-https',
       },
     ],
     defaultCacheBehavior: {
